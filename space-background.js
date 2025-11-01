@@ -20,7 +20,7 @@ const cursor = {
     y: pseudo_canvas_height / 2,
 }
 
-const spaceship_sprite_url = 'spaceship1.png'
+const spaceship_sprite_url = 'spaceship.png'
 let spaceship_img = null
 
 const planet_texture_urls = ['planet0.png', 'planet1.png']
@@ -282,8 +282,8 @@ function updatePlanets(dt) {
 }
 
 function shiftBackground() {
-    const xRatio = cursor.x / WINDOW_W - 0.5
-    const yRatio = cursor.y / WINDOW_H - 0.5
+    const xRatio = cursor.x / pseudo_canvas_width - 0.5
+    const yRatio = cursor.y / pseudo_canvas_height - 0.5
     const moveX = -xRatio * 30
     const moveY = -yRatio * 30
 
