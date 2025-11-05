@@ -3,7 +3,7 @@
 const SCREEN_W = screen.width
 const SCREEN_H = screen.height
 
-let CANVAS_SCALE = 0.25
+let CANVAS_SCALE = 1
 
 let WINDOW_W = window.innerWidth
 let WINDOW_H = window.innerHeight
@@ -93,10 +93,6 @@ const ship_data = {
     damp_dist_cost: 20
 }
 
-const planet_frame_width = 378
-const planet_frame_height = 376
-
-let planet_dt = 0
 let ship_dt = 0
 let last_timestamp = null
 let texture_offset = 0
@@ -107,17 +103,10 @@ const ship_frame_width = 850
 const ship_frame_height = 850
 const total_rotation_frames = 24
 const total_thrust_frames = 6
-let rotation_frame = 0
+let ship_rotation_frame = 0
 let thrust_frame = 0
 let ship_frame_rate = 80
 let prev_ship_frame_time = 0
-const max_ticks = 10
-let speed_ticks = 5
-
-const LEFT_BOUND = -ship_data.size
-const RIGHT_BOUND = WINDOW_W + ship_data.size
-const TOP_BOUND = -ship_data.size
-const BOTTOM_BOUND = WINDOW_H + ship_data.size
 
 let paused = false
 let animation_id = null
@@ -125,7 +114,6 @@ let animation_start = null
 let animation_pause_dt = 0
 
 let slider_dialog_open = false
-let message_box_expanded = false
 
 const $stars = document.getElementById('stars-wrapper')
 const $stars1 = document.getElementById('stars-1')
@@ -142,10 +130,8 @@ window.addEventListener("resize", handleResize)
 window.addEventListener("blur", stopAnimation);
 window.addEventListener("focus", startAnimation);
 window.addEventListener("load", () => {
-    const $main = document.getElementById('main-content')
     $stars.classList.replace('disabled', 'enabled')
     $canvas.classList.replace('disabled', 'enabled')
-    $main.classList.replace('disabled', 'enabled')
 })
 
 document.getElementById('pause-play-btn').onclick = (e) => {
@@ -342,7 +328,7 @@ function updateShipFrame(dt) {
     thrust_frame = total_thrust_frames - parseInt((total_thrust_frames - 1) * (ship_data.speed / ship_data.max_speed)) - 1
 
     if (ship_dt * 1000 > ship_frame_rate) {
-        rotation_frame = (rotation_frame + (ship_data.speed / ship_data.max_speed > 0.1 ? 1 : 0)) % total_rotation_frames
+        ship_rotation_frame = (ship_rotation_frame + (ship_data.speed / ship_data.max_speed > 0.1 ? 1 : 0)) % total_rotation_frames
         ship_dt = 0
     }
 }
@@ -380,7 +366,7 @@ function drawPlanets() {
 
 function drawShipSprite() {
     ctx.save()
-    const frame_x = rotation_frame * ship_frame_width
+    const frame_x = ship_rotation_frame * ship_frame_width
     const frame_y = thrust_frame * ship_frame_width
 
     const { x, y, angle, size } = ship_data
@@ -461,8 +447,6 @@ function moveForward(dt, dx, dy) {
     ship_data.y += Math.sin(rad) * translation_speed * dt
     ship_data.speed = translation_speed
 
-    //checkBounds()
-
     // if (distance(ship_state.x, ship_state.y, prev_ship_x, prev_ship_y) >= DASH_SPACING) {
     //     const $dash = document.createElement("div")
     //     $dash.className = "dash"
@@ -482,24 +466,6 @@ function easeInOutQuad(t) {
     return t < 0.5
         ? t * (2 - t)
         : -1 + (4 - 2 * t) * t;
-}
-
-function checkBounds() {
-    const shipCenterX = ship_data.x + ship_data.size / 2
-    const shipCenterY = ship_data.y + ship_data.size / 2
-
-    if (shipCenterX <= LEFT_BOUND) {
-        setShipCenterX(LEFT_BOUND + 1)
-    }
-    else if (shipCenterX >= RIGHT_BOUND) {
-        setShipCenterX(RIGHT_BOUND - 1)
-    }
-    if (shipCenterY <= TOP_BOUND) {
-        setShipCenterY(TOP_BOUND + 1)
-    }
-    else if (shipCenterY >= BOTTOM_BOUND) {
-        setShipCenterY(BOTTOM_BOUND - 1)
-    }
 }
 
 function startAnimation() {
