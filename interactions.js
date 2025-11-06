@@ -24,7 +24,6 @@ document.getElementById('contact-form').onsubmit = async (e) => {
         alert(data.message)
     } catch (err) {
         console.error(err)
-        alert(data.error)
     }
 
 }
