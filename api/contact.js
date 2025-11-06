@@ -9,10 +9,19 @@ export default async function handler(req, res) {
     const { name, email, subject, message } = req.body
 
     try {
-        await resend.emalis.send({
-            
+        const data = await resend.emails.send({
+            from: 'Portfolio Website Contact <onboarding@resend.dev>',
+            to: process.env.MY_EMAIL,
+            subject: subject || 'New Contact From Message',
+            html: `
+            <h2>New message from ${name}</h2>
+            <p><strong>Email:</strong> ${email}</p>
+            <p>${message}</p>
+            `,
         })
+
+        res.status(200).json({ success: true, data })
     } catch (err) {
-        
+        res.status(500).json({ error: err.message })
     }
 }

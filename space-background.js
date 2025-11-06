@@ -3,6 +3,8 @@
 const SCREEN_W = screen.width
 const SCREEN_H = screen.height
 
+const min_device_width = 768
+
 let CANVAS_SCALE = 1
 
 let WINDOW_W = window.innerWidth
@@ -28,47 +30,56 @@ const planet_textures = []
 
 const planet_data = {
     0: {
-        size: 340 * CANVAS_SCALE,
+        size: null,
         x: pseudo_canvas_width * 0.15,
         y: pseudo_canvas_height * 0.4,
         x_mult: 0.15,
         y_mult: 0.4,
+        x_mult_min: 0.05,
+        y_mult_min: 0.2,
         tilt_deg: 25,
         offset: 0,
         rot_speed: 10,
         dt: 0,
         filter: 0.55,
         size_const: 340,
+        size_const_min: 170,
         frame_width: 378,
         frame_height: 376
     },
     1: {
-        size: 170 * CANVAS_SCALE,
+        size: null,
         x: pseudo_canvas_width * 0.5,
         y: pseudo_canvas_height * 0.7,
         x_mult: 0.5,
         y_mult: 0.7,
+        x_mult_min: 0.5,
+        y_mult_min: 0.7,
         tilt_deg: 35,
         offset: 0,
         rot_speed: 20,
         dt: 0,
         filter: 0.7,
         size_const: 170,
+        size_const_min: 85,
         frame_width: 378,
         frame_height: 376
     },
     2: {
-        size: 1020 * CANVAS_SCALE,
+        size: null,
         x: pseudo_canvas_width * 1.15,
         y: pseudo_canvas_height * 0.8,
         x_mult: 1.15,
         y_mult: 0.8,
+        x_mult_min: 1.10,
+        y_mult_min: 1,
         tilt_deg: -20,
         offset: 0,
         rot_speed: 10,
         dt: 0,
         filter: 0.35,
-        size_const: 1020,
+        size_const: 820,
+        size_const_min: 410,
         frame_width: 1512,
         frame_height: 1504
     },
@@ -207,10 +218,12 @@ function resizePseudoCanvas(scale) {
     $canvas.width = pseudo_canvas_width
     $canvas.height = pseudo_canvas_height
     ctx.imageSmoothingEnabled = false
+
+    const is_min_width = WINDOW_W > min_device_width
     Object.values(planet_data).forEach((planet) => {
-        planet.size = planet.size_const * CANVAS_SCALE
-        planet.x = pseudo_canvas_width * planet.x_mult
-        planet.y = pseudo_canvas_height * planet.y_mult
+        planet.size = CANVAS_SCALE * (is_min_width ? planet.size_const : planet.size_const_min)
+        planet.x = pseudo_canvas_width * (is_min_width ? planet.x_mult : planet.x_mult_min)
+        planet.y = pseudo_canvas_height * (is_min_width ? planet.y_mult :planet.y_mult_min)
     })
     ship_data.size = ship_data.size_const * CANVAS_SCALE
     ship_data.x *= scale_ratio
@@ -264,6 +277,14 @@ function init() {
     $canvas.style.width = WINDOW_W + 'px'
     $canvas.style.height = WINDOW_H + 'px'
     ctx.imageSmoothingEnabled = false
+
+    const is_min_width = WINDOW_W > min_device_width
+    Object.values(planet_data).forEach((planet) => {
+        planet.size = CANVAS_SCALE * (is_min_width ? planet.size_const : planet.size_const_min)
+        planet.x = pseudo_canvas_width * (is_min_width ? planet.x_mult : planet.x_mult_min)
+        planet.y = pseudo_canvas_height * (is_min_width ? planet.y_mult :planet.y_mult_min)
+    })
+
     initStars()
     loadTextures().then(startAnimation)
 }
@@ -401,7 +422,7 @@ function handleMouseMove(e) {
 }
 
 function handleResize(e) {
-    console.log('resize')
+    console.log(WINDOW_W, min_device_width)
     WINDOW_W = window.innerWidth
     WINDOW_H = window.innerHeight
     const prev_width = pseudo_canvas_width
@@ -414,9 +435,11 @@ function handleResize(e) {
     $canvas.style.height = WINDOW_H + 'px'
     ctx.imageSmoothingEnabled = false
 
+    const is_min_width = WINDOW_W > min_device_width
     Object.values(planet_data).forEach((planet) => {
-        planet.x = pseudo_canvas_width * planet.x_mult
-        planet.y = pseudo_canvas_height * planet.y_mult
+        planet.size = CANVAS_SCALE * (is_min_width ? planet.size_const : planet.size_const_min)
+        planet.x = pseudo_canvas_width * (is_min_width ? planet.x_mult : planet.x_mult_min)
+        planet.y = pseudo_canvas_height * (is_min_width ? planet.y_mult : planet.y_mult_min)
     })
 
     if(paused) {
