@@ -29,7 +29,7 @@ document.getElementById('contact-form').onsubmit = async (e) => {
         if(res.status === 200) {
             e.target.reset()
             e.submitter.classList.remove('opacity-0')
-            e.submitter.parentElement.remove('bg-teal-300')
+            e.submitter.parentElement.classList.remove('bg-teal-300')
             $spinner.classList.replace('animate-spin', 'opacity-0')
             alert('Message sent successfully!')
         }

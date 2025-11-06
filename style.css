@@ -79,7 +79,7 @@ body {
 }
 
 .disabled {
-    pointer-events: n;
+    pointer-events: none;
     opacity: 0;
 }
 
