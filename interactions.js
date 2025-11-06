@@ -10,6 +10,11 @@ window.addEventListener("load", () => {
 
 document.getElementById('contact-form').onsubmit = async (e) => {
     e.preventDefault()
+    console.log(e)
+    const $spinner = document.getElementById('email-send-spinner')
+
+    e.submitter.classList.add('opacity-0')
+    $spinner.classList.replace('opacity-0', 'animate-spin')
 
     const form_data = Object.fromEntries(new FormData(e.target).entries())
 
@@ -20,8 +25,15 @@ document.getElementById('contact-form').onsubmit = async (e) => {
             body: JSON.stringify(form_data)
         })
 
+        if(res.status === 200) {
+            e.target.reset()
+            e.submitter.classList.remove('opacity-0')
+            $spinner.classList.replace('animate-spin', 'opacity-0')
+            alert('Message sent successfully!')
+        }
+
         const data = await res.json()
-        alert(data.message)
+        
     } catch (err) {
         console.error(err)
     }

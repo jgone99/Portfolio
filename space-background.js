@@ -159,7 +159,6 @@ document.getElementById('pause-play-btn').onclick = (e) => {
 }
 
 document.getElementById('slider-dialog-btn').onclick = (e) => {
-    console.log('dialog')
     if (slider_dialog_open) {
         slider_dialog_open = false
         $slider_dialog.classList.add('enabled', 'disabled')
@@ -422,7 +421,6 @@ function handleMouseMove(e) {
 }
 
 function handleResize(e) {
-    console.log(WINDOW_W, min_device_width)
     WINDOW_W = window.innerWidth
     WINDOW_H = window.innerHeight
     const prev_width = pseudo_canvas_width
@@ -442,7 +440,7 @@ function handleResize(e) {
         planet.y = pseudo_canvas_height * (is_min_width ? planet.y_mult : planet.y_mult_min)
     })
 
-    if(paused) {
+    if(animation_id === null) {
         drawAll()
     }
 }
