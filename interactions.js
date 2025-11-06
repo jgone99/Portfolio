@@ -1,12 +1,26 @@
 // varibale definitions
 let message_box_expanded = false
-
+const $message_box = document.getElementById('message-box')
 
 // event listeners
 window.addEventListener("load", () => {
     const $main = document.getElementById('main-content')
     $main.classList.replace('disabled', 'enabled')
 })
+
+document.getElementById('email-message-expand-btn').onclick = (e) => {
+    console.log(window)
+    if (message_box_expanded) {
+        message_box_expanded = false
+        $message_box.classList.replace('h-150', 'h-30')
+        e.target.classList.replace('fa-down-left-and-up-right-to-center', 'fa-up-right-and-down-left-from-center')
+    }
+    else {
+        message_box_expanded = true
+        $message_box.classList.replace('h-30', 'h-150')
+        e.target.classList.replace('fa-up-right-and-down-left-from-center', 'fa-down-left-and-up-right-to-center')
+    }
+}
 
 document.getElementById('contact-form').onsubmit = async (e) => {
     e.preventDefault()
