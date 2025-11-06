@@ -190,7 +190,6 @@ init()
 
 
 // function definitions
-
 function resizePseudoCanvas(scale) {
     const scale_ratio = scale / CANVAS_SCALE
     cursor.x *= scale_ratio
@@ -494,7 +493,6 @@ function animateBackground(timestamp) {
 
     const dt = (timestamp - last_timestamp) / 1000
     last_timestamp = timestamp
-    shiftBackground()
     updatePlanets(dt)
     updateShip(dt)
     updateShipFrame(dt)
