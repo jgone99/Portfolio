@@ -14,6 +14,7 @@ document.getElementById('contact-form').onsubmit = async (e) => {
     const $spinner = document.getElementById('email-send-spinner')
 
     e.submitter.classList.add('opacity-0')
+    e.submitter.parentElement.classList.add('bg-teal-300')
     $spinner.classList.replace('opacity-0', 'animate-spin')
 
     const form_data = Object.fromEntries(new FormData(e.target).entries())
@@ -28,6 +29,7 @@ document.getElementById('contact-form').onsubmit = async (e) => {
         if(res.status === 200) {
             e.target.reset()
             e.submitter.classList.remove('opacity-0')
+            e.submitter.parentElement.remove('bg-teal-300')
             $spinner.classList.replace('animate-spin', 'opacity-0')
             alert('Message sent successfully!')
         }
